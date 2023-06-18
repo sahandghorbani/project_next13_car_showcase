@@ -7,8 +7,13 @@ import { fetchCars } from "@utils";
 import { fuels, yearsOfProduction } from "@constants";
 import { CarCard, ShowMore, SearchBar, CustomFilter, Hero } from "@components";
 import { CarState } from "@types";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Home() {
+  const searchParams = useSearchParams()
+  // const modelQ = searchParams.get('model')
+  // console.log(modelQ);
+  
   const [allCars, setAllCars] = useState<CarState>([]);
   const [loading, setLoading] = useState(false);
 
@@ -24,17 +29,23 @@ export default function Home() {
   const [limit, setLimit] = useState(10);
 
   const getCars = async () => {
+ 
+
     setLoading(true);
     try {
       const result = await fetchCars({
-        manufacturer: manufacturer.toLowerCase() || "",
-        model: model.toLowerCase() || "",
+        manufacturer: searchParams.get('manufacturer') || "",
+        model:searchParams.get('model') || "",
         fuel: fuel.toLowerCase() || "",
         year: year || 2022,
         limit: limit || 10,
       });
-
+      
       setAllCars(result);
+      // console.log(result);
+      // console.log(router);
+      
+      
     } catch {
       console.error();
     } finally {
@@ -44,7 +55,7 @@ export default function Home() {
 
   useEffect(() => {
     getCars();
-  }, [fuel, year, limit, manufacturer, model]);
+  }, [searchParams]);
 
   return (
     <main className='overflow-hidden'>
