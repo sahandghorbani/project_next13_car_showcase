@@ -1,24 +1,25 @@
-'use client'
+"use client";
 import { fetchCars } from "@utils";
 import { HomeProps } from "@types";
 import { fuels, yearsOfProduction } from "@constants";
 import { CarCard, ShowMore, SearchBar, CustomFilter, Hero } from "@components";
 import { useEffect, useState } from "react";
-import {  useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 export default function Home() {
-  const [allCars, setAllCars] = useState([])
-  const [loading, setLoading] = useState(false)
-  const searchParams = useSearchParams()
+  const [allCars, setAllCars] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const searchParams = useSearchParams();
   const getCars = async () => {
+    // setAllCars([]);
     setLoading(true);
     try {
       const result = await fetchCars({
         manufacturer: searchParams.get("manufacturer") || "",
         model: searchParams.get("model") || "",
-        fuel: searchParams.get('fuel') || "",
-        year: searchParams.get('year') || 2022,
-        limit: searchParams.get('limit') || 10,
+        fuel: searchParams.get("fuel") || "",
+        year: searchParams.get("year") || 2022,
+        limit: searchParams.get("limit") || 10,
       });
 
       setAllCars(result);
@@ -54,7 +55,9 @@ export default function Home() {
           </div>
         </div>
 
-        {!isDataEmpty ? (
+        {loading ? (
+          <p>Loading...</p>
+        ) : !isDataEmpty ? (
           <section>
             <div className="home__cars-wrapper">
               {allCars?.map((car) => (
